@@ -1,6 +1,8 @@
 package com.market.gold.serivce;
 
+import com.market.gold.GoldRepository;
 import com.market.gold.model.Gold;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -17,7 +19,8 @@ import java.util.regex.Pattern;
 @Service
 public class GoldService {
 
-    private final String baseURL = "https://blogtygia.com/gia-vang-ngay-";
+    @Autowired
+    private GoldRepository repository;
 
     private final Pattern groupPattern = Pattern.compile("<tr class=\"danger\"> <td colspan=\"5\"> <strong>(.*?)</strong> </td> </tr> " +
             "(<tr> <td>(.*?)</td> <td> ([0-9]+,[0-9]{3}) (.*?)</td> <td> ([0-9]+,[0-9]{3}) (.*?)</td> " +
@@ -30,8 +33,14 @@ public class GoldService {
             "<td class=\"hidden-xs\">([0-9]+,[0-9]{3})</td> " +
             "<td class=\"hidden-xs\">([0-9]+,[0-9]{3})</td> </tr>");
 
+    private void saveGolds(List<Gold> golds) {
+        System.out.println("[INFO] Save golds to db");
+        repository.saveAll(golds);
+    }
+
     public List<Gold> fetchPriceByDate(String date) throws IOException {
         System.out.println("[INFO] Start fetching URL");
+        String baseURL = "https://blogtygia.com/gia-vang-ngay-";
         URL url = new URL(baseURL + date + ".html");
 
         String content = getContentFromURL(url);
@@ -45,6 +54,8 @@ public class GoldService {
             List<Gold> group = extractListGoldInGroupWithDate(groupName, groupMatcher.group(0), fetchDate);
             golds.addAll(group);
         }
+
+        saveGolds(golds);
 
         return golds;
     }
@@ -63,13 +74,24 @@ public class GoldService {
     }
 
     private List<Gold> extractListGoldInGroupWithDate(String groupName, String content, LocalDate date) {
+        System.out.println("[INFO] Extract data from content");
         List<Gold> golds = new ArrayList<>();
         Matcher goldMatcher = goldPattern.matcher(content);
         while (goldMatcher.find()) {
             String name = goldMatcher.group(1);
             Integer bidPrice = Integer.valueOf(goldMatcher.group(2).replaceAll(",", ""));
             Integer askPrice = Integer.valueOf(goldMatcher.group(4).replaceAll(",", ""));
-            Gold gold = new Gold(name, groupName, bidPrice, askPrice, date);
+
+            Gold gold = Gold.builder()
+                    .name(name)
+                    .groupName(groupName)
+                    .bidPrice(bidPrice)
+                    .askPrice(askPrice)
+                    .date(date)
+                    .build();
+
+            System.out.println(gold);
+
             golds.add(gold);
         }
         return golds;
