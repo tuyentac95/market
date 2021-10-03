@@ -31,22 +31,25 @@ public class GoldService {
             "<td class=\"hidden-xs\">([0-9]+,[0-9]{3})</td> </tr>");
 
     public List<Gold> fetchPriceByDate(String date) throws IOException {
+        LocalDate fetchDate = LocalDate.parse(date, DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+        return fetchPriceByDate(fetchDate);
+    }
+
+    public List<Gold> fetchPriceByDate(LocalDate date) throws IOException {
         System.out.println("[INFO] Start fetching URL");
         URL url = new URL(baseURL + date + ".html");
 
         String content = getContentFromURL(url);
         Matcher groupMatcher = groupPattern.matcher(content);
 
-        LocalDate fetchDate = LocalDate.parse(date, DateTimeFormatter.ofPattern("dd-MM-yyyy"));
         List<Gold> golds = new ArrayList<>();
-
         while (groupMatcher.find()) {
             String groupName = groupMatcher.group(1);
-            List<Gold> group = extractListGoldInGroupWithDate(groupName, groupMatcher.group(0), fetchDate);
+            List<Gold> group = extractListGoldInGroupWithDate(groupName, groupMatcher.group(0), date);
             golds.addAll(group);
         }
-
         return golds;
+
     }
 
     private String getContentFromURL(URL url) throws IOException {
@@ -63,6 +66,7 @@ public class GoldService {
     }
 
     private List<Gold> extractListGoldInGroupWithDate(String groupName, String content, LocalDate date) {
+        System.out.println("[INFO] Start extract data from content");
         List<Gold> golds = new ArrayList<>();
         Matcher goldMatcher = goldPattern.matcher(content);
         while (goldMatcher.find()) {
@@ -70,6 +74,7 @@ public class GoldService {
             Integer bidPrice = Integer.valueOf(goldMatcher.group(2).replaceAll(",", ""));
             Integer askPrice = Integer.valueOf(goldMatcher.group(4).replaceAll(",", ""));
             Gold gold = new Gold(name, groupName, bidPrice, askPrice, date);
+            System.out.println(gold);
             golds.add(gold);
         }
         return golds;
