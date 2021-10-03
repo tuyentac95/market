@@ -17,7 +17,7 @@ public class GoldSchedule {
     @Autowired
     private GoldService service;
 
-    @Scheduled(cron = "0 32 20 * * ?", zone = "Asia/Bangkok")
+    @Scheduled(cron = "0 30 17 * * ?", zone = "Asia/Bangkok")
     private void scheduleJob() {
         System.out.println("[INFO] Start cron job: Fetching price of gold today");
         try {

@@ -94,8 +94,6 @@ public class GoldService {
                     .date(date)
                     .build();
 
-            System.out.println(gold);
-
             golds.add(gold);
         }
         return golds;
