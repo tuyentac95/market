@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -19,15 +19,12 @@ public class GoldController {
     private GoldService service;
 
     @GetMapping("/gold/{date}")
-    public ResponseEntity<List<Gold>> fetchPriceByDate(@PathVariable String date) {
-        try {
-            List<Gold> golds = service.fetchPriceByDate(date);
+    public ResponseEntity<List<Gold>> getPriceByDate(@PathVariable String date) {
+        List<Gold> golds = service.getPriceByDate(date);
+        if (!golds.isEmpty()) {
             return ResponseEntity.status(HttpStatus.OK).body(golds);
-        } catch (IOException e) {
-            System.out.println("[ERROR]");
-            e.printStackTrace();
         }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ArrayList<>());
     }
 
 }
