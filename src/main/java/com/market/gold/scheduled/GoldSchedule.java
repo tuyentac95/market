@@ -9,7 +9,6 @@ import org.springframework.scheduling.annotation.Scheduled;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.List;
 
 @Configuration
 @EnableScheduling
@@ -18,14 +17,12 @@ public class GoldSchedule {
     @Autowired
     private GoldService service;
 
-    @Scheduled(cron = "0 22 20 * * ?", zone = "Asia/Bangkok")
+    @Scheduled(cron = "0 32 20 * * ?", zone = "Asia/Bangkok")
     private void scheduleJob() {
         System.out.println("[INFO] Start cron job: Fetching price of gold today");
         try {
             LocalDate today = LocalDate.now();
-            List<Gold> golds = service.fetchPriceByDate(today);
-            System.out.println("[INFO] Print first gold");
-            System.out.println(golds.get(0));
+            service.fetchPriceByDate(today);
         } catch (IOException e) {
             System.out.println("[ERROR]");
             e.printStackTrace();

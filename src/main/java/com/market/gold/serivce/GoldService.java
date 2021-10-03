@@ -37,7 +37,8 @@ public class GoldService {
 
     public List<Gold> fetchPriceByDate(LocalDate date) throws IOException {
         System.out.println("[INFO] Start fetching URL");
-        URL url = new URL(baseURL + date + ".html");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        URL url = new URL(baseURL + date.format(formatter) + ".html");
 
         String content = getContentFromURL(url);
         Matcher groupMatcher = groupPattern.matcher(content);
@@ -74,7 +75,6 @@ public class GoldService {
             Integer bidPrice = Integer.valueOf(goldMatcher.group(2).replaceAll(",", ""));
             Integer askPrice = Integer.valueOf(goldMatcher.group(4).replaceAll(",", ""));
             Gold gold = new Gold(name, groupName, bidPrice, askPrice, date);
-            System.out.println(gold);
             golds.add(gold);
         }
         return golds;
