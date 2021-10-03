@@ -39,19 +39,23 @@ public class GoldService {
     }
 
     public List<Gold> fetchPriceByDate(String date) throws IOException {
+        LocalDate fetchDate = LocalDate.parse(date, DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+        return fetchPriceByDate(fetchDate);
+    }
+
+    public List<Gold> fetchPriceByDate(LocalDate date) throws IOException {
         System.out.println("[INFO] Start fetching URL");
         String baseURL = "https://blogtygia.com/gia-vang-ngay-";
-        URL url = new URL(baseURL + date + ".html");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        URL url = new URL(baseURL + date.format(formatter) + ".html");
 
         String content = getContentFromURL(url);
         Matcher groupMatcher = groupPattern.matcher(content);
 
-        LocalDate fetchDate = LocalDate.parse(date, DateTimeFormatter.ofPattern("dd-MM-yyyy"));
         List<Gold> golds = new ArrayList<>();
-
         while (groupMatcher.find()) {
             String groupName = groupMatcher.group(1);
-            List<Gold> group = extractListGoldInGroupWithDate(groupName, groupMatcher.group(0), fetchDate);
+            List<Gold> group = extractListGoldInGroupWithDate(groupName, groupMatcher.group(0), date);
             golds.addAll(group);
         }
 
@@ -74,7 +78,7 @@ public class GoldService {
     }
 
     private List<Gold> extractListGoldInGroupWithDate(String groupName, String content, LocalDate date) {
-        System.out.println("[INFO] Extract data from content");
+        System.out.println("[INFO] Start extract data from content");
         List<Gold> golds = new ArrayList<>();
         Matcher goldMatcher = goldPattern.matcher(content);
         while (goldMatcher.find()) {
@@ -89,8 +93,6 @@ public class GoldService {
                     .askPrice(askPrice)
                     .date(date)
                     .build();
-
-            System.out.println(gold);
 
             golds.add(gold);
         }
