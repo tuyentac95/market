@@ -98,4 +98,9 @@ public class GoldService {
         }
         return golds;
     }
+
+    public List<Gold> getPriceByDate(String date) {
+        LocalDate localDate = LocalDate.parse(date, DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+        return repository.findByDate(localDate).orElse(new ArrayList<>());
+    }
 }
