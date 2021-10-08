@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,7 +25,12 @@ public class GoldController {
         if (!golds.isEmpty()) {
             return ResponseEntity.status(HttpStatus.OK).body(golds);
         }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ArrayList<>());
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(service.fetchPriceByDate(date));
+        } catch (IOException e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ArrayList<>());
+        }
     }
 
 }
