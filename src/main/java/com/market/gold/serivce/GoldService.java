@@ -1,6 +1,6 @@
 package com.market.gold.serivce;
 
-import com.market.gold.GoldRepository;
+import com.market.gold.repository.GoldRepository;
 import com.market.gold.model.Gold;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
