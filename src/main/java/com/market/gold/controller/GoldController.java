@@ -10,8 +10,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 public class GoldController {
@@ -31,6 +34,12 @@ public class GoldController {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ArrayList<>());
         }
+    }
+
+    @GetMapping("/fetch-gold/{month}")
+    public ResponseEntity<String> fetchPrice(@PathVariable String month) {
+        service.fetchPriceByMonth(month);
+        return ResponseEntity.status(HttpStatus.OK).body("OK");
     }
 
 }
