@@ -1,4 +1,4 @@
-package com.market.gold;
+package com.market.gold.repository;
 
 import com.market.gold.model.Gold;
 import org.springframework.data.jpa.repository.JpaRepository;

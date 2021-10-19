@@ -1,8 +1,10 @@
 package com.market.gold.serivce;
 
-import com.market.gold.GoldRepository;
+import com.market.gold.repository.GoldRepository;
 import com.market.gold.model.Gold;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -13,6 +15,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -102,5 +105,29 @@ public class GoldService {
     public List<Gold> getPriceByDate(String date) {
         LocalDate localDate = LocalDate.parse(date, DateTimeFormatter.ofPattern("dd-MM-yyyy"));
         return repository.findByDate(localDate).orElse(new ArrayList<>());
+    }
+
+    public List<Gold> fetchPriceByMonth(String month) {
+        LocalDate startDate = LocalDate.parse("01-" + month +"-2021", DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+        int daysOfMonth = startDate.lengthOfMonth();
+        LocalDate endDate = startDate.plusDays(daysOfMonth);
+        LocalDate fetchDay = startDate;
+        List<Gold> golds = new ArrayList<>();
+        while (endDate.compareTo(fetchDay) > 0) {
+            try {
+                System.out.println("Fetch price of day: " + fetchDay);
+                List<Gold> goldsOfDate = fetchPriceByDate(fetchDay);
+                golds.addAll(goldsOfDate);
+                fetchDay = fetchDay.plusDays(1);
+                TimeUnit.SECONDS.sleep(5);
+            } catch (InterruptedException | IOException e) {
+                System.out.println("Error in day: " + fetchDay);
+                e.printStackTrace();
+                return null;
+            }
+        }
+        System.out.println("Save golds to DB");
+        saveGolds(golds);
+        return golds;
     }
 }
