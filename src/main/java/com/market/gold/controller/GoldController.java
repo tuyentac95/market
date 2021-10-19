@@ -33,4 +33,15 @@ public class GoldController {
         }
     }
 
+    @GetMapping("/fetch-gold/{month}")
+    public ResponseEntity<String> fetchPrice(@PathVariable String month) {
+        service.fetchPriceByMonth(month);
+        return ResponseEntity.status(HttpStatus.OK).body("OK");
+    }
+
+    @GetMapping("/")
+    public String welcome() {
+        return "This application is ready!";
+    }
+
 }
