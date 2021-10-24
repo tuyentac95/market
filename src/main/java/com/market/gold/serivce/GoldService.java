@@ -150,4 +150,12 @@ public class GoldService {
     public GoldCategory getCategory(Long id) {
         return categoryRepository.findById(id).orElse(null);
     }
+
+    public List<Gold> fetchPriceByType(Long id) {
+        GoldCategory category = categoryRepository.findById(id).orElse(null);
+        if (category != null) {
+            return repository.findByType(category.getName(), category.getGroup_name()).orElse(null);
+        }
+        return null;
+    }
 }

@@ -60,5 +60,14 @@ public class GoldController {
         return ResponseEntity.status(HttpStatus.OK).body(category);
     }
 
+    @GetMapping("/fetch-gold/type/{id}")
+    public ResponseEntity<List<Gold>> fetchPriceByType(@PathVariable Long id) {
+        List<Gold> golds = service.fetchPriceByType(id);
+        if (golds != null) {
+            return ResponseEntity.status(HttpStatus.OK).body(golds);
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+    }
+
 
 }
