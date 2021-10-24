@@ -1,6 +1,7 @@
 package com.market.gold.controller;
 
 import com.market.gold.model.Gold;
+import com.market.gold.model.GoldCategory;
 import com.market.gold.serivce.GoldService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -43,5 +44,21 @@ public class GoldController {
     public String welcome() {
         return "This application is ready!";
     }
+
+    @GetMapping("/gold/type")
+    public ResponseEntity<List<GoldCategory>> getCategories() {
+        List<GoldCategory> categories = service.getCategories();
+        return ResponseEntity.status(HttpStatus.OK).body(categories);
+    }
+
+    @GetMapping("/gold/type/{id}")
+    public ResponseEntity<GoldCategory> getCategory(@PathVariable Long id) {
+        GoldCategory category = service.getCategory(id);
+        if (category == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(category);
+    }
+
 
 }

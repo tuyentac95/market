@@ -1,10 +1,10 @@
 package com.market.gold.serivce;
 
+import com.market.gold.model.GoldCategory;
+import com.market.gold.repository.GoldCategoryRepository;
 import com.market.gold.repository.GoldRepository;
 import com.market.gold.model.Gold;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -14,6 +14,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
@@ -24,6 +25,9 @@ public class GoldService {
 
     @Autowired
     private GoldRepository repository;
+
+    @Autowired
+    private GoldCategoryRepository categoryRepository;
 
     private final Pattern groupPattern = Pattern.compile("<tr class=\"danger\"> <td colspan=\"5\"> <strong>(.*?)</strong> </td> </tr> " +
             "(<tr> <td>(.*?)</td> <td> ([0-9]+,[0-9]{3}) (.*?)</td> <td> ([0-9]+,[0-9]{3}) (.*?)</td> " +
@@ -108,7 +112,7 @@ public class GoldService {
     }
 
     public List<Gold> fetchPriceByMonth(String month) {
-        LocalDate startDate = LocalDate.parse("01-" + month +"-2021", DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+        LocalDate startDate = LocalDate.parse("01-" + month + "-2021", DateTimeFormatter.ofPattern("dd-MM-yyyy"));
         int daysOfMonth = startDate.lengthOfMonth();
         LocalDate endDate = startDate.plusDays(daysOfMonth);
         LocalDate fetchDay = startDate;
@@ -129,5 +133,21 @@ public class GoldService {
         System.out.println("Save golds to DB");
         saveGolds(golds);
         return golds;
+    }
+
+    public List<GoldCategory> getCategories() {
+//        List<GoldCategory> categories = categoryRepository.getAllCategories().get();
+//        categories.forEach((category) -> {
+//            System.out.println(category);
+//            GoldCategory newCat = GoldCategory.builder().name(category.getName()).group_name(category.getGroup_name()).build();
+//            System.out.println(newCat);
+//            categoryRepository.save(newCat);
+//            System.out.println("Saved");
+//        });
+        return categoryRepository.findAll();
+    }
+
+    public GoldCategory getCategory(Long id) {
+        return categoryRepository.findById(id).orElse(null);
     }
 }
