@@ -17,10 +17,21 @@ public class FundController {
     private FundService service;
 
     @GetMapping("/fund/bvpf")
-    public ResponseEntity<Fund> getAllNav() {
+    public ResponseEntity<Fund> getBvpf() {
         try {
             Fund BVPF = service.fetchNav();
             return ResponseEntity.status(HttpStatus.OK).body(BVPF);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+    }
+
+    @GetMapping("/fund/pvbf")
+    public ResponseEntity<Fund> getPvbf() {
+        try {
+            Fund PVBF = service.fetchPvbf();
+            return ResponseEntity.status(HttpStatus.OK).body(PVBF);
         } catch (IOException e) {
             e.printStackTrace();
         }
