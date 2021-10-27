@@ -6,13 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -22,6 +20,9 @@ public class GoldService {
 
     @Autowired
     private GoldRepository repository;
+
+    @Autowired
+    private UrlService urlService;
 
     private final Pattern groupPattern = Pattern.compile("<tr class=\"danger\"> <td colspan=\"5\"> <strong>(.*?)</strong> </td> </tr> " +
             "(<tr> <td>(.*?)</td> <td> ([0-9]+,[0-9]{3}) (.*?)</td> <td> ([0-9]+,[0-9]{3}) (.*?)</td> " +
@@ -50,7 +51,7 @@ public class GoldService {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         URL url = new URL(baseURL + date.format(formatter) + ".html");
 
-        String content = getContentFromURL(url);
+        String content = urlService.getContentFromURL(url);
         Matcher groupMatcher = groupPattern.matcher(content);
 
         List<Gold> golds = new ArrayList<>();
@@ -63,19 +64,6 @@ public class GoldService {
         saveGolds(golds);
 
         return golds;
-    }
-
-    private String getContentFromURL(URL url) throws IOException {
-        System.out.println("[INFO] Handle content from URL");
-
-        Scanner scanner = new Scanner(new InputStreamReader(url.openStream()));
-        scanner.useDelimiter("\\Z");
-        String content = scanner.next();
-        scanner.close();
-
-        content = content.replaceAll("\\n+", "");
-        content = content.replaceAll("\\s+", " ");
-        return content;
     }
 
     private List<Gold> extractListGoldInGroupWithDate(String groupName, String content, LocalDate date) {
