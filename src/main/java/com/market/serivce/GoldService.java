@@ -1,10 +1,8 @@
-package com.market.gold.serivce;
+package com.market.serivce;
 
-import com.market.gold.repository.GoldRepository;
-import com.market.gold.model.Gold;
+import com.market.repository.GoldRepository;
+import com.market.model.Gold;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
