@@ -1,7 +1,6 @@
-package com.market.gold.scheduled;
+package com.market.scheduled;
 
-import com.market.gold.model.Gold;
-import com.market.gold.serivce.GoldService;
+import com.market.serivce.GoldService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
