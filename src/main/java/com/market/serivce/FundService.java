@@ -1,6 +1,8 @@
 package com.market.serivce;
 
+import com.market.factory.FundFactory;
 import com.market.model.Fund;
+import com.market.model.FundParameter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -9,7 +11,6 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @Service
 public class FundService {
@@ -17,44 +18,22 @@ public class FundService {
     @Autowired
     private UrlService urlService;
 
-    private final Pattern bvpfPattern = Pattern.compile("<ul> <li> NAV/CCQ tại ng&#224;y (\\d{2}/\\d{2}/\\d{4}?) <strong>(\\d+.\\d+?) VNĐ</strong></li>");
-    private final Pattern pvbfPattern = Pattern.compile("NAV/CCQ&nbsp;</span></span>tại kỳ GD (\\d{2}/\\d{2}/\\d{4}?)<span class=\"(\\w+)\">: (\\d+,\\d+?).(\\d+) VND&nbsp;");
-
-    public Fund fetchNav() throws IOException {
+    public Fund fetchNav(String code) throws IOException {
+        FundParameter parameter = FundFactory.getFund(code);
         System.out.println("[INFO] Start fetching URL");
-        URL url = new URL("https://baovietfund.com.vn/san-pham/BVPF");
+        URL url = new URL(parameter.getBaseURL());
 
         String content = urlService.getContentFromURL(url);
 
-        Matcher matcher = bvpfPattern.matcher(content);
+        Matcher matcher = parameter.getPattern().matcher(content);
 
         while (matcher.find()) {
             return new Fund(
-                    "Quỹ Đầu tư Cổ phiếu Triển vọng Bảo Việt",
-                    "BVPF",
-                    LocalDate.parse(matcher.group(1), DateTimeFormatter.ofPattern("dd/MM/yyyy")),
-                    Double.parseDouble(matcher.group(2)));
+                    parameter.getName(),
+                    parameter.getCode(),
+                    LocalDate.parse(matcher.group(parameter.getDateMatchGroup()), DateTimeFormatter.ofPattern("dd/MM/yyyy")),
+                    Double.parseDouble(matcher.group(parameter.getNavMatchGroup()).replaceAll(",", ".")));
         }
         return null;
-    }
-
-    public Fund fetchPvbf() throws IOException {
-        System.out.println("[INFO] Start fetching URL");
-        URL url = new URL("https://pvcomcapital.com.vn/quy-pvbf");
-
-        String content = urlService.getContentFromURL(url);
-
-        Matcher matcher = pvbfPattern.matcher(content);
-
-        while (matcher.find()) {
-            return new Fund(
-                    "QUỸ ĐẦU TƯ TRÁI PHIẾU PVCOM",
-                    "PVBF",
-                    LocalDate.parse(matcher.group(1), DateTimeFormatter.ofPattern("dd/MM/yyyy")),
-                    Double.parseDouble(matcher.group(3).replaceAll(",", ".")));
-        }
-
-        return null;
-
     }
 }
