@@ -20,7 +20,7 @@ public class FundFactory {
         } else if (code.equals("pvbf")) {
             parameter = FundParameter.builder()
                     .baseURL("https://pvcomcapital.com.vn/quy-pvbf")
-                    .pattern(Pattern.compile("NAV/CCQ&nbsp;</span></span>tại kỳ GD (\\d{2}/\\d{2}/\\d{4}?)<span class=\"(\\w+)\">: (\\d+,\\d+?).(\\d+) VND&nbsp;"))
+                    .pattern(Pattern.compile("NAV/CCQ </span></span>tại kỳ GD (\\d{2}/\\d{2}/\\d{4}?)<span class=\"(\\w+)\">: (\\d+,\\d+?).(\\d+) VND"))
                     .code("PVBF")
                     .name("QUỸ ĐẦU TƯ TRÁI PHIẾU PVCOM")
                     .dateMatchGroup(1)
