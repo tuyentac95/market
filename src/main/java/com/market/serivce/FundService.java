@@ -24,6 +24,7 @@ public class FundService {
         URL url = new URL(parameter.getBaseURL());
 
         String content = urlService.getContentFromURL(url);
+        content = content.replaceAll("&nbsp;", " ");
 
         Matcher matcher = parameter.getPattern().matcher(content);
 
