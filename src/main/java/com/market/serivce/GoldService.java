@@ -138,10 +138,10 @@ public class GoldService {
         return categoryRepository.findById(id).orElse(null);
     }
 
-    public List<Gold> fetchPriceByType(Long id) {
+    public List<Gold> fetchPriceByType(Long id, LocalDate from, LocalDate to) {
         GoldCategory category = categoryRepository.findById(id).orElse(null);
         if (category != null) {
-            return repository.findByType(category.getName(), category.getGroup_name()).orElse(null);
+            return repository.findByType(category.getName(), category.getGroup_name(), from, to).orElse(null);
         }
         return null;
     }

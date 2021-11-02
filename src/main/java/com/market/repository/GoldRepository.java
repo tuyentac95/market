@@ -14,9 +14,12 @@ import java.util.Optional;
 public interface GoldRepository extends JpaRepository<Gold, Long> {
     Optional<List<Gold>> findByDate(LocalDate date);
 
-    @Query("select g from Gold g where g.name = :name and g.groupName = :groupName order by g.date")
+    @Query("select g from Gold g where g.name = :name and g.groupName = :groupName " +
+            "and g.date between :from and :to order by g.date")
     Optional<List<Gold>> findByType(
             @Param("name") String name,
-            @Param("groupName") String groupName
+            @Param("groupName") String groupName,
+            @Param("from") LocalDate from,
+            @Param("to") LocalDate to
     );
 }
