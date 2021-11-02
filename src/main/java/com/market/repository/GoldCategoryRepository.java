@@ -1,6 +1,6 @@
-package com.market.gold.repository;
+package com.market.repository;
 
-import com.market.gold.model.GoldCategory;
+import com.market.model.GoldCategory;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;

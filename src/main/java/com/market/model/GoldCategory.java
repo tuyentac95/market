@@ -1,4 +1,4 @@
-package com.market.gold.model;
+package com.market.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

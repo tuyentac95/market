@@ -1,8 +1,8 @@
-package com.market.gold.controller;
+package com.market.controller;
 
-import com.market.gold.model.Gold;
-import com.market.gold.model.GoldCategory;
-import com.market.gold.serivce.GoldService;
+import com.market.model.Gold;
+import com.market.model.GoldCategory;
+import com.market.serivce.GoldService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
