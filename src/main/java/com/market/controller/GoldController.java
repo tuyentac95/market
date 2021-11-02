@@ -1,15 +1,17 @@
 package com.market.controller;
 
+import com.market.dto.DateRangeParams;
 import com.market.model.Gold;
+import com.market.model.GoldCategory;
 import com.market.serivce.GoldService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,5 +45,32 @@ public class GoldController {
     public String welcome() {
         return "This application is ready!";
     }
+
+    @GetMapping("/gold/type")
+    public ResponseEntity<List<GoldCategory>> getCategories() {
+        List<GoldCategory> categories = service.getCategories();
+        return ResponseEntity.status(HttpStatus.OK).body(categories);
+    }
+
+    @GetMapping("/gold/type/{id}")
+    public ResponseEntity<GoldCategory> getCategory(@PathVariable Long id) {
+        GoldCategory category = service.getCategory(id);
+        if (category == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(category);
+    }
+
+    @PostMapping("/fetch-gold/type/{id}")
+    public ResponseEntity<List<Gold>> fetchPriceByType(@PathVariable Long id, @RequestBody DateRangeParams range) {
+        LocalDate from = LocalDate.parse(range.getFrom(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        LocalDate to = LocalDate.parse(range.getTo(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        List<Gold> golds = service.fetchPriceByType(id, from, to);
+        if (golds != null) {
+            return ResponseEntity.status(HttpStatus.OK).body(golds);
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+    }
+
 
 }
