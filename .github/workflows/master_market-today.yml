@@ -25,13 +25,13 @@ jobs:
         uses: gradle/gradle-build-action@v2
     
       - name: Run build with Gradle Wrapper
-        run: ./gradlew clean build
+        run: ./gradlew build war
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v2
         with:
           name: java-app
-          path: '${{ github.workspace }}/target/*.war'
+          path: '${{ github.workspace }}/build/libs/*.war'
 
   deploy:
     runs-on: ubuntu-latest
