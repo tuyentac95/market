@@ -1,9 +1,7 @@
 package com.market.serivce;
 
-import com.market.repository.GoldRepository;
 import com.market.model.Gold;
 import com.market.model.GoldCategory;
-import com.market.repository.GoldCategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,14 +18,14 @@ import java.util.regex.Pattern;
 @Service
 public class GoldService {
 
-    @Autowired
-    private GoldRepository repository;
+//    @Autowired
+//    private GoldRepository repository;
 
     @Autowired
     private UrlService urlService;
 
-    @Autowired
-    private GoldCategoryRepository categoryRepository;
+//    @Autowired
+//    private GoldCategoryRepository categoryRepository;
 
     private final Pattern groupPattern = Pattern.compile("<tr class=\"danger\"> <td colspan=\"5\"> <strong>(.*?)</strong> </td> </tr> " +
             "(<tr> <td>(.*?)</td> <td> ([0-9]+,[0-9]{3}) (.*?)</td> <td> ([0-9]+,[0-9]{3}) (.*?)</td> " +
@@ -42,7 +40,7 @@ public class GoldService {
 
     private void saveGolds(List<Gold> golds) {
         System.out.println("[INFO] Save golds to db");
-        repository.saveAll(golds);
+//        repository.saveAll(golds);
     }
 
     public List<Gold> fetchPriceByDate(String date) throws IOException {
@@ -95,7 +93,8 @@ public class GoldService {
 
     public List<Gold> getPriceByDate(String date) {
         LocalDate localDate = LocalDate.parse(date, DateTimeFormatter.ofPattern("dd-MM-yyyy"));
-        return repository.findByDate(localDate).orElse(new ArrayList<>());
+//        return repository.findByDate(localDate).orElse(new ArrayList<>());
+        return null;
     }
 
     public List<Gold> fetchPriceByMonth(String month) {
@@ -131,18 +130,20 @@ public class GoldService {
 //            categoryRepository.save(newCat);
 //            System.out.println("Saved");
 //        });
-        return categoryRepository.findAll();
+//        return categoryRepository.findAll();
+        return null;
     }
 
     public GoldCategory getCategory(Long id) {
-        return categoryRepository.findById(id).orElse(null);
+//        return categoryRepository.findById(id).orElse(null);
+        return null;
     }
 
     public List<Gold> fetchPriceByType(Long id, LocalDate from, LocalDate to) {
-        GoldCategory category = categoryRepository.findById(id).orElse(null);
-        if (category != null) {
-            return repository.findByType(category.getName(), category.getGroup_name(), from, to).orElse(null);
-        }
+//        GoldCategory category = categoryRepository.findById(id).orElse(null);
+//        if (category != null) {
+//            return repository.findByType(category.getName(), category.getGroup_name(), from, to).orElse(null);
+//        }
         return null;
     }
 }

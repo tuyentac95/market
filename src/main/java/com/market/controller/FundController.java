@@ -35,7 +35,7 @@ public class FundController {
     }
 
     @GetMapping("/v2/fund/{code}")
-    public ResponseEntity<Fund> fetchStock(@PathVariable String code) {
+    public ResponseEntity<Fund> fetchFund(@PathVariable String code) {
         Fund f = service.findFund(code);
         if (f != null) return ResponseEntity.status(HttpStatus.OK).body(f);
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);

@@ -10,13 +10,13 @@ import java.io.IOException;
 import java.time.LocalDate;
 
 @Configuration
-@EnableScheduling
+//@EnableScheduling
 public class GoldSchedule {
 
     @Autowired
     private GoldService service;
 
-    @Scheduled(cron = "00 00 21 * * ?", zone = "Asia/Bangkok")
+//    @Scheduled(cron = "00 00 21 * * ?", zone = "Asia/Bangkok")
     private void scheduleJob() {
         System.out.println("[INFO] Start cron job: Fetching price of gold today");
         try {
