@@ -20,8 +20,11 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: '8'
-
-      - name: Build with Gradle
+      
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v2
+    
+      - name: Run build with Gradle Wrapper
         run: ./gradlew clean build
 
       - name: Upload artifact for deployment job
