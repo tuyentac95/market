@@ -25,6 +25,8 @@ jobs:
         uses: gradle/gradle-build-action@v2
     
       - name: Run build with Gradle Wrapper
+        env:
+          SERVER_CONTEXT_PATH: ${{ secrets.SERVER_CONTEXT_PATH }}
         run: ./gradlew build war
 
       - name: Upload artifact for deployment job
