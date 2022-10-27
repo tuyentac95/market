@@ -28,8 +28,8 @@ jobs:
           DATASOURCE_PASSWORD: ${{ secrets.DATASOURCE_PASSWORD }}
         run: |
           echo "spring.datasource.url=${DATASOURCE_URL}" >> src/main/resources/application.properties
-          echo "spring.datasource.url=${DATASOURCE_USERNAME}" >> src/main/resources/application.properties
-          echo "spring.datasource.url=${DATASOURCE_PASSWORD}" >> src/main/resources/application.properties
+          echo "spring.datasource.username=${DATASOURCE_USERNAME}" >> src/main/resources/application.properties
+          echo "spring.datasource.password=${DATASOURCE_PASSWORD}" >> src/main/resources/application.properties
 
       - name: Test variable
         run: cat src/main/resources/application.properties
