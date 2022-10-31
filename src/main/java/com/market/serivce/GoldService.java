@@ -64,7 +64,7 @@ public class GoldService {
             golds.addAll(group);
         }
 
-        saveGolds(golds);
+//        saveGolds(golds);
 
         return golds;
     }

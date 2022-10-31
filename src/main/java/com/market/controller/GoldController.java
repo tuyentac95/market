@@ -23,11 +23,11 @@ public class GoldController {
 
     @GetMapping("/gold/{date}")
     public ResponseEntity<List<Gold>> getPriceByDate(@PathVariable String date) {
-        List<Gold> golds = service.getPriceByDate(date);
-        if (!golds.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.OK).body(golds);
-        }
         try {
+            List<Gold> golds = service.fetchPriceByDate(date);
+            if (!golds.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.OK).body(golds);
+            }
             return ResponseEntity.status(HttpStatus.OK).body(service.fetchPriceByDate(date));
         } catch (IOException e) {
             e.printStackTrace();
